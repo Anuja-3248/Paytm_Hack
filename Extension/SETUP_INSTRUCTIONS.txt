@@ -1,0 +1,93 @@
+========================================================================
+   ScamLens — AI Email Scam Detector (Chrome Extension)
+   Quick Setup Guide for Team Members & Developers
+========================================================================
+
+Follow these simple steps to install and test the ScamLens extension
+on your computer.
+
+------------------------------------------------------------------------
+STEP 1: GET THE REPOSITORY FOLDER
+------------------------------------------------------------------------
+1. Clone the git repository or download and extract the ZIP file to 
+   a folder on your computer (for example: C:\Users\YourName\ScamLens).
+2. Ensure you see the "manifest.json" file inside the root folder.
+
+------------------------------------------------------------------------
+STEP 2: OPEN CHROME EXTENSIONS MANAGER
+------------------------------------------------------------------------
+1. Open Google Chrome.
+2. In the Chrome address bar at the top, type:
+   chrome://extensions
+   and press Enter.
+
+   (Alternative way: Click the 3 dots menu ⋮ at top-right -> 
+    Extensions -> Manage Extensions).
+
+------------------------------------------------------------------------
+STEP 3: TURN ON DEVELOPER MODE
+------------------------------------------------------------------------
+1. Look at the top-right corner of the Extensions page.
+2. Toggle the switch for "Developer mode" to ON.
+
+------------------------------------------------------------------------
+STEP 4: LOAD THE UNPACKED EXTENSION
+------------------------------------------------------------------------
+1. Click the "Load unpacked" button (top-left corner).
+2. In the file explorer popup, select the project folder where the 
+   repository was cloned (the folder containing manifest.json).
+3. Click "Select Folder".
+
+You will now see "ScamLens — AI Email Scam Detector" listed in Chrome!
+
+------------------------------------------------------------------------
+STEP 5: PIN THE EXTENSION TO YOUR TOOLBAR
+------------------------------------------------------------------------
+1. Click the puzzle-piece icon (Extensions icon) on your Chrome toolbar 
+   (to the right of the address bar).
+2. Find "ScamLens — AI Email Scam Detector" in the dropdown list.
+3. Click the Pin icon (📌) next to it so the ScamLens blue magnifying 
+   glass icon remains visible on your toolbar.
+
+------------------------------------------------------------------------
+STEP 6: TEST READING AN EMAIL IN GMAIL
+------------------------------------------------------------------------
+1. Navigate to Gmail: https://mail.google.com/
+2. Click on any email in your inbox to open and display it on screen.
+3. Click the ScamLens icon on your Chrome toolbar.
+4. Click the "Read Current Email" button.
+
+WHAT HAPPENS NEXT:
+- ScamLens reads the opened email from your screen.
+- It automatically opens a new browser tab ("ScamLens — Email Data Preview").
+- On that page, you will see:
+  * Extraction Status: Success
+  * Summary Banner (Sender, Subject, and detected links count)
+  * Metadata (Sender Name, Sender Email, Recipient, Subject, Date)
+  * Full extracted plain-text body in a scrollable view
+  * List of all detected links with their destination URLs
+  * JSON Integration Viewer with a "Copy Integration JSON" button
+
+------------------------------------------------------------------------
+NOTES FOR BACKEND & GEMMA 4 AI INTEGRATION
+------------------------------------------------------------------------
+- The extracted email data is stored in chrome.storage.local under the 
+  key "scamlens_extracted_email".
+- The data structure is:
+  {
+    "status": "success",
+    "sender_name": "...",
+    "sender_email": "...",
+    "recipient": "...",
+    "subject": "...",
+    "date": "...",
+    "body": "...",
+    "links": [
+      { "text": "...", "url": "..." }
+    ],
+    "link_count": 0
+  }
+- To copy this data directly, click the "Copy Integration JSON" button 
+  on the preview page.
+
+========================================================================
