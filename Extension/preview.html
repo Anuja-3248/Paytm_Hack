@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScamLens — Email Data Preview</title>
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Navigation / Header -->
+    <header class="app-header">
+      <div class="header-container">
+        <div class="brand-group">
+          <img src="icons/icon48.png" alt="ScamLens Logo" class="brand-logo">
+          <div>
+            <h1 class="brand-heading">ScamLens — Email Data Preview</h1>
+            <p class="brand-sub">Factual extraction preview from active Gmail message</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <span id="extractionStatusBadge" class="status-badge status-loading">Loading...</span>
+          <button id="copyJsonBtn" class="btn btn-outline" type="button" title="Copy raw JSON payload for backend/AI model">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>Copy Integration JSON</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="content-container">
+
+      <!-- Error State Card (Hidden by default) -->
+      <section id="errorCard" class="card error-card hidden" role="alert">
+        <div class="error-header">
+          <span class="error-icon">⚠️</span>
+          <h2>Extraction Failed</h2>
+        </div>
+        <p id="errorMessage" class="error-text">No email data found. Please open an email in Gmail and click "Read Current Email" in the ScamLens extension popup.</p>
+      </section>
+
+      <!-- Main Preview Content (Visible on success) -->
+      <div id="previewContent" class="preview-grid">
+
+        <!-- Top Factual Summary Banner -->
+        <section class="card summary-banner" aria-label="Extraction Summary">
+          <div class="summary-icon">📋</div>
+          <div class="summary-details">
+            <h2 class="summary-title">Summary</h2>
+            <p id="summaryText" class="summary-body">Extracting email summary...</p>
+          </div>
+        </section>
+
+        <!-- Metadata Overview Cards -->
+        <section class="card metadata-section" aria-label="Email Metadata">
+          <h2 class="section-title">Email Metadata</h2>
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">Subject</span>
+              <span id="metaSubject" class="meta-value">-</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Sender Name</span>
+              <span id="metaSenderName" class="meta-value">-</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Sender Email</span>
+              <span id="metaSenderEmail" class="meta-value code-font">-</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Recipient</span>
+              <span id="metaRecipient" class="meta-value">-</span>
+            </div>
+            <div class="meta-item meta-item-full">
+              <span class="meta-label">Date / Time</span>
+              <span id="metaDate" class="meta-value">-</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Email Body Section -->
+        <section class="card body-section" aria-label="Email Body Content">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Extracted Email Body</h2>
+              <span class="section-subtitle">Plain text with preserved line breaks (sanitized, scripts stripped)</span>
+            </div>
+            <span id="bodyLengthBadge" class="info-badge">0 characters</span>
+          </div>
+          <div class="body-scroll-container">
+            <pre id="emailBodyContent" class="body-pre">No body content loaded.</pre>
+          </div>
+        </section>
+
+        <!-- Detected Links Section -->
+        <section class="card links-section" aria-label="Detected Links">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Detected Links</h2>
+              <span class="section-subtitle">All hyperlinked URLs and anchor labels found in the message</span>
+            </div>
+            <span id="linkCountBadge" class="info-badge">0 Links</span>
+          </div>
+
+          <div id="linksContainer" class="links-list-container">
+            <!-- Dynamically injected safely using textContent -->
+          </div>
+        </section>
+
+        <!-- Teammate Integration & JSON Payload Section -->
+        <section class="card dev-section" aria-label="Teammate Integration Payload">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Backend & Gemma 4 API Integration Payload</h2>
+              <span class="section-subtitle">Structured data object formatted for AI scam analysis ingestion</span>
+            </div>
+            <button id="toggleJsonBtn" class="btn btn-sm btn-outline" type="button">Collapse JSON</button>
+          </div>
+          <div class="integration-notice">
+            <span class="notice-icon">💡</span>
+            <p>
+              <strong>Developer Note:</strong> This object isolates email extraction from analysis.
+              No artificial scam scores or verdicts have been applied. Your team's Gemma 4 model or backend pipeline
+              can consume this standardized structure directly from <code>chrome.storage.local</code> or REST endpoint.
+            </p>
+          </div>
+          <div id="jsonWrapper" class="json-viewer-wrapper">
+            <pre id="jsonPreview" class="json-pre"></pre>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-container">
+        <span>ScamLens Extension • Manifest V3 • Email Extraction Phase</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="preview.js"></script>
+</body>
+</html>
