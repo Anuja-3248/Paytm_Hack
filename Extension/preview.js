@@ -34,6 +34,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   const jsonWrapper = document.getElementById('jsonWrapper');
   const jsonPreview = document.getElementById('jsonPreview');
 
+  // Gemma AI Security Assessment Elements
+  const aiRiskBadge = document.getElementById('aiRiskBadge');
+  const runAnalysisBtn = document.getElementById('runAnalysisBtn');
+  const aiLoadingBox = document.getElementById('aiLoadingBox');
+  const aiErrorBox = document.getElementById('aiErrorBox');
+  const aiErrorMessage = document.getElementById('aiErrorMessage');
+  const aiResultBox = document.getElementById('aiResultBox');
+  const metricThreatLevel = document.getElementById('metricThreatLevel');
+  const metricRiskScore = document.getElementById('metricRiskScore');
+  const metricVerdict = document.getElementById('metricVerdict');
+  const aiExplanationText = document.getElementById('aiExplanationText');
+  const aiFlagsBlock = document.getElementById('aiFlagsBlock');
+  const aiFlagsList = document.getElementById('aiFlagsList');
+  const aiRecBlock = document.getElementById('aiRecBlock');
+  const aiRecText = document.getElementById('aiRecText');
+
+  const BACKEND_URL = 'http://127.0.0.1:8000/analyze';
   let currentEmailData = null;
 
   /**
@@ -145,6 +162,150 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 5. Raw Integration JSON view (Prepared for teammate Gemma 4 API ingestion)
     const formattedJson = JSON.stringify(data, null, 2);
     jsonPreview.textContent = formattedJson;
+
+    // 6. Automatically run Gemma AI backend assessment
+    runBackendAnalysis(data);
+  }
+
+  /**
+   * Send Extracted Email to ScamLens Backend (Gemma AI)
+   */
+  async function runBackendAnalysis(emailData) {
+    if (!emailData) return;
+
+    // Set UI to loading state
+    aiLoadingBox.classList.remove('hidden');
+    aiErrorBox.classList.add('hidden');
+    aiResultBox.classList.add('hidden');
+    runAnalysisBtn.disabled = true;
+
+    aiRiskBadge.className = 'status-badge status-loading';
+    aiRiskBadge.textContent = 'Analyzing with Gemma...';
+
+    // Prepare unified text payload for the backend /analyze endpoint
+    const textLines = [];
+    if (emailData.subject && emailData.subject !== 'Not available') {
+      textLines.push(`Subject: ${emailData.subject}`);
+    }
+    if (emailData.sender_name || emailData.sender_email) {
+      textLines.push(`From: ${emailData.sender_name || ''} <${emailData.sender_email || ''}>`);
+    }
+    if (emailData.date && emailData.date !== 'Not available') {
+      textLines.push(`Date: ${emailData.date}`);
+    }
+    if (emailData.body && emailData.body !== 'Not available') {
+      textLines.push('\nEmail Body:');
+      textLines.push(emailData.body);
+    }
+    if (Array.isArray(emailData.links) && emailData.links.length > 0) {
+      textLines.push('\nDetected Links:');
+      emailData.links.forEach((l) => {
+        textLines.push(`- ${l.text || 'Link'}: ${l.url}`);
+      });
+    }
+
+    const payloadText = textLines.join('\n').trim();
+
+    try {
+      const response = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content: payloadText || 'Empty email content' })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Backend server responded with status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      // Parse Gemma AI explanation JSON if returned as string
+      let aiData = null;
+      if (result.ai_analysis) {
+        try {
+          aiData = typeof result.ai_analysis === 'string' ? JSON.parse(result.ai_analysis) : result.ai_analysis;
+        } catch {
+          aiData = { explanation: result.ai_analysis };
+        }
+      }
+
+      // Determine final risk level (prioritize AI assessment if present)
+      const rawLevel = (aiData?.risk_level || result.risk_level || 'low').toLowerCase();
+      const riskScore = typeof result.risk_score === 'number' ? result.risk_score : 0;
+
+      let levelClass = 'safe';
+      let levelLabel = 'SAFE / LOW RISK';
+      let verdict = 'No immediate scam indicators detected';
+
+      if (rawLevel === 'high' || riskScore >= 70) {
+        levelClass = 'danger';
+        levelLabel = 'HIGH RISK';
+        verdict = 'Phishing / Scam Threat Detected';
+      } else if (rawLevel === 'medium' || rawLevel === 'uncertain' || riskScore >= 40) {
+        levelClass = 'warning';
+        levelLabel = 'SUSPICIOUS';
+        verdict = 'Review carefully before interacting';
+      }
+
+      // Update Badges & Metrics
+      aiRiskBadge.className = `status-badge status-${levelClass}`;
+      aiRiskBadge.textContent = levelLabel;
+
+      metricThreatLevel.className = `metric-value ${levelClass}`;
+      metricThreatLevel.textContent = levelLabel;
+
+      metricRiskScore.className = `metric-value ${levelClass}`;
+      metricRiskScore.textContent = `${riskScore}%`;
+
+      metricVerdict.className = `metric-value ${levelClass}`;
+      metricVerdict.textContent = verdict;
+
+      // Update Explanation
+      const explanation = aiData?.explanation || result.details || 'Analysis complete.';
+      aiExplanationText.textContent = explanation;
+
+      // Combine warning flags
+      const combinedFlags = [
+        ...(result.flags || []),
+        ...(aiData?.flags || [])
+      ];
+
+      if (combinedFlags.length > 0) {
+        aiFlagsBlock.classList.remove('hidden');
+        aiFlagsList.textContent = '';
+        combinedFlags.forEach((flag) => {
+          const li = document.createElement('li');
+          li.textContent = flag;
+          aiFlagsList.appendChild(li);
+        });
+      } else {
+        aiFlagsBlock.classList.add('hidden');
+      }
+
+      // Update Recommendations
+      const recommendation = aiData?.recommendation || '';
+      if (recommendation) {
+        aiRecBlock.classList.remove('hidden');
+        aiRecText.textContent = recommendation;
+      } else {
+        aiRecBlock.classList.add('hidden');
+      }
+
+      // Show results
+      aiLoadingBox.classList.add('hidden');
+      aiResultBox.classList.remove('hidden');
+    } catch (err) {
+      console.error('[ScamLens] Backend analysis failed:', err);
+      aiLoadingBox.classList.add('hidden');
+      aiErrorBox.classList.remove('hidden');
+      aiErrorMessage.textContent = `Could not reach ${BACKEND_URL}. Ensure your backend server is running (uvicorn main:app --reload --port 8000). Error: ${err.message}`;
+      aiRiskBadge.className = 'status-badge status-error';
+      aiRiskBadge.textContent = 'Backend Offline';
+    } finally {
+      runAnalysisBtn.disabled = false;
+    }
   }
 
   // Retrieve stored extracted email from chrome.storage.local or testing fallback
@@ -205,4 +366,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const isHidden = jsonWrapper.classList.toggle('hidden');
     toggleJsonBtn.textContent = isHidden ? 'Expand JSON' : 'Collapse JSON';
   });
+
+  // Re-run Analysis button handler
+  if (runAnalysisBtn) {
+    runAnalysisBtn.addEventListener('click', () => {
+      if (currentEmailData) {
+        runBackendAnalysis(currentEmailData);
+      }
+    });
+  }
 });

@@ -55,6 +55,80 @@
           </div>
         </section>
 
+        <!-- Gemma AI Security Assessment Card -->
+        <section class="card ai-assessment-card" id="aiAssessmentCard" aria-label="AI ScamLens Analysis">
+          <div class="ai-card-header">
+            <div class="ai-card-title-group">
+              <span class="ai-sparkle-icon">🛡️</span>
+              <div>
+                <h2 class="section-title">Gemma AI Security Assessment</h2>
+                <span class="section-subtitle">Real-time scam & phishing intelligence from ScamLens Backend</span>
+              </div>
+            </div>
+            <div class="ai-header-controls">
+              <span id="aiRiskBadge" class="status-badge status-loading">Analyzing...</span>
+              <button id="runAnalysisBtn" class="btn btn-sm btn-primary" type="button">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                </svg>
+                <span>Re-Analyze</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Loading state -->
+          <div id="aiLoadingBox" class="ai-loading-box">
+            <div class="spinner"></div>
+            <p>Evaluating email with Google Gemma AI on your ScamLens backend...</p>
+          </div>
+
+          <!-- Error state -->
+          <div id="aiErrorBox" class="ai-alert-box error hidden">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-body">
+              <strong>Backend Disconnected:</strong>
+              <p id="aiErrorMessage">Could not connect to http://127.0.0.1:8000/analyze. Ensure your Python backend is running.</p>
+            </div>
+          </div>
+
+          <!-- Result Content -->
+          <div id="aiResultBox" class="ai-result-content hidden">
+            <!-- Score & Level Row -->
+            <div class="ai-metrics-row">
+              <div class="metric-card">
+                <span class="metric-label">Threat Level</span>
+                <span id="metricThreatLevel" class="metric-value">-</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Risk Score</span>
+                <span id="metricRiskScore" class="metric-value">-</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Verdict</span>
+                <span id="metricVerdict" class="metric-value">-</span>
+              </div>
+            </div>
+
+            <!-- Gemma AI Explanation -->
+            <div class="ai-content-block">
+              <h3 class="block-title">AI Scam Explanation</h3>
+              <p id="aiExplanationText" class="block-text"></p>
+            </div>
+
+            <!-- Warning Signals / Flags -->
+            <div id="aiFlagsBlock" class="ai-content-block hidden">
+              <h3 class="block-title">Identified Warning Signs</h3>
+              <ul id="aiFlagsList" class="ai-flags-list"></ul>
+            </div>
+
+            <!-- Actionable Recommendations -->
+            <div id="aiRecBlock" class="ai-content-block rec-block hidden">
+              <h3 class="block-title">Recommended Safety Actions</h3>
+              <p id="aiRecText" class="block-text"></p>
+            </div>
+          </div>
+        </section>
+
         <!-- Metadata Overview Cards -->
         <section class="card metadata-section" aria-label="Email Metadata">
           <h2 class="section-title">Email Metadata</h2>
