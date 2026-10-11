@@ -1,0 +1,457 @@
+/* ScamLens Extracted Email Preview Styles */
+:root {
+  --primary: #1a73e8;
+  --primary-dark: #1557b0;
+  --primary-light: #e8f0fe;
+  --bg-page: #f1f5f9;
+  --bg-card: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --success-bg: #ecfdf5;
+  --success-text: #065f46;
+  --success-border: #a7f3d0;
+  --error-bg: #fef2f2;
+  --error-text: #991b1b;
+  --error-border: #fecaca;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.app-header {
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+}
+
+.brand-heading {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+}
+
+.brand-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Status Badges */
+.status-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-loading {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: 1px solid var(--border-medium);
+}
+
+.status-success {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+  border: 1px solid var(--success-border);
+}
+
+.status-error {
+  background-color: var(--error-bg);
+  color: var(--error-text);
+  border: 1px solid var(--error-border);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.btn-outline {
+  background-color: #ffffff;
+  color: var(--text-secondary);
+  border-color: var(--border-medium);
+}
+
+.btn-outline:hover {
+  background-color: #f8fafc;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.btn-icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* Container */
+.content-container {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 0 24px;
+  flex: 1;
+  width: 100%;
+}
+
+.preview-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Cards */
+.card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  padding: 22px;
+}
+
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.section-subtitle {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.info-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  background-color: var(--primary-light);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+/* Summary Banner */
+.summary-banner {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e0effe 100%);
+  border: 1px solid #bfdbfe;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.summary-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.summary-details {
+  flex: 1;
+}
+
+.summary-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1e40af;
+  margin-bottom: 4px;
+}
+
+.summary-body {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e3a8a;
+  line-height: 1.5;
+}
+
+/* Metadata Grid */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 20px;
+  margin-top: 14px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta-item-full {
+  grid-column: span 2;
+}
+
+.meta-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+}
+
+.meta-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background-color: #f8fafc;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  word-break: break-all;
+}
+
+.code-font {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+}
+
+/* Email Body Section */
+.body-scroll-container {
+  background-color: #fafbfc;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.body-pre {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #1e293b;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Links Section */
+.links-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.link-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background-color: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  transition: border-color 0.15s ease;
+}
+
+.link-row:hover {
+  border-color: #93c5fd;
+}
+
+.link-text-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.link-destination {
+  font-size: 12px;
+  color: var(--primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  word-break: break-all;
+  text-decoration: none;
+}
+
+.link-destination:hover {
+  text-decoration: underline;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  background-color: #f8fafc;
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-sm);
+}
+
+/* Developer & JSON section */
+.dev-section {
+  border-left: 4px solid var(--primary);
+}
+
+.integration-notice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  color: #1e40af;
+}
+
+.json-viewer-wrapper {
+  background-color: #0f172a;
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.json-pre {
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Error Card */
+.error-card {
+  border-left: 4px solid #ef4444;
+  background-color: var(--error-bg);
+  border-color: var(--error-border);
+}
+
+.error-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.error-header h2 {
+  font-size: 16px;
+  color: var(--error-text);
+}
+
+.error-icon {
+  font-size: 20px;
+}
+
+.error-text {
+  font-size: 13px;
+  color: #7f1d1d;
+}
+
+/* Utilities */
+.hidden {
+  display: none !important;
+}
+
+/* Footer */
+.app-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border-light);
+  background-color: var(--bg-card);
+  padding: 14px 24px;
+  text-align: center;
+}
+
+.footer-container {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .meta-grid {
+    grid-template-columns: 1fr;
+  }
+  .meta-item-full {
+    grid-column: span 1;
+  }
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

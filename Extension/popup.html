@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScamLens</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <div class="header-brand">
+        <img src="icons/icon48.png" alt="ScamLens Logo" class="brand-icon">
+        <div class="brand-text">
+          <h1 class="brand-title">ScamLens</h1>
+          <span class="brand-subtitle">AI Email Scam Detector</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="popup-body">
+      <div class="instruction-card">
+        <div class="instruction-icon">ℹ️</div>
+        <p class="instruction-text">
+          Please open an email in <strong>Gmail</strong> before clicking below.
+        </p>
+      </div>
+
+      <button id="readEmailBtn" class="primary-btn" type="button">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        <span id="btnText">Read Current Email</span>
+      </button>
+
+      <div id="statusBox" class="status-box hidden" role="status" aria-live="polite">
+        <div class="spinner hidden" id="statusSpinner"></div>
+        <p id="statusMessage" class="status-message"></p>
+      </div>
+    </main>
+
+    <footer class="popup-footer">
+      <span class="footer-note">Extraction Module • Ready for Gemma 4 AI</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
