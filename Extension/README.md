@@ -4,15 +4,13 @@ ScamLens is a Chrome Extension designed to inspect opened emails directly in Gma
 
 ---
 
-## 📌 Scope of this Module
-This extension handles **Phase 1: Email Ingestion & Extraction**:
-1. Checks whether Gmail is open in the active tab.
-2. Checks whether an email is currently selected and opened.
-3. Extracts the opened email's metadata (sender name, sender email, recipient, subject, timestamp), readable body text, and detected hyperlinks.
-4. Safely opens a dedicated preview tab (`preview.html`) and displays the extracted factual summary.
-5. Structures the payload into a clean, standardized JSON object ready for **Gemma 4 API** integration by team members.
-
-> **Note:** Factual extraction only. No artificial risk scores, fake verdicts, or hardcoded AI responses are generated.
+## 📌 Overview & Scope
+ScamLens combines factual email extraction with **Gemma 4 AI scam detection**:
+1. Checks whether Gmail is open in the active tab and an email is selected.
+2. Safely extracts email metadata (sender, recipient, subject, timestamp), readable body text, and detected hyperlinks without running untrusted scripts.
+3. Opens a dedicated preview and analysis dashboard (`preview.html`).
+4. Automatically communicates with the local **ScamLens Backend API (`http://127.0.0.1:8000/analyze`)**.
+5. Renders a live **Gemma AI Security Assessment Card** with Threat Level, Risk Score, AI Explanation, Warning Signs, and Actionable Recommendations.
 
 ---
 
@@ -30,10 +28,7 @@ Follow these quick steps to load the extension into your browser:
 
 ### Step 3: Load Unpacked Extension
 1. Click the **Load unpacked** button that appears in the top-left corner.
-2. In the folder picker dialog, select your project folder:
-   ```
-   d:\work\HackToFestMumbai
-   ```
+2. In the folder picker dialog, select your project `Extension` folder:
 3. Click **Select Folder**.
 
 ### Step 4: Pin ScamLens to Chrome Toolbar
@@ -53,6 +48,7 @@ Follow these quick steps to load the extension into your browser:
    - Validate that Gmail is active and an email is selected.
    - Extract the email's subject, sender, recipient, timestamp, readable body, and links.
    - Automatically open the **ScamLens — Email Data Preview** tab showing:
+     - Live **Gemma AI Security Assessment** (Threat Level, Risk Score, Explanation, Warning Signs, Recommendations)
      - Factual extraction summary
      - Metadata cards
      - Scrollable, plain-text body (sanitized)
@@ -74,9 +70,12 @@ Follow these quick steps to load the extension into your browser:
 
 ---
 
-## 🤝 Teammate Integration Guide (Gemma 4 API & Backend)
+## 🤝 Backend & Gemma 4 API Integration
 
-The extracted email data is stored in `chrome.storage.local` under the key `scamlens_extracted_email`.
+The extension connects to the ScamLens FastAPI backend:
+- **API Endpoint:** `POST http://127.0.0.1:8000/analyze`
+- **Model:** `gemma-4-26b-a4b-it` via official Google GenAI SDK.
+- The extracted email data is also stored locally in `chrome.storage.local` under the key `scamlens_extracted_email`.
 
 ### Standardized JSON Data Structure:
 ```json
@@ -96,53 +95,4 @@ The extracted email data is stored in `chrome.storage.local` under the key `scam
   ],
   "link_count": 1
 }
-```
-
-### Consuming in Backend or AI Service:
-```javascript
-// In your backend connector or preview page:
-chrome.storage.local.get(['scamlens_extracted_email'], async (result) => {
-  const emailData = result.scamlens_extracted_email;
-  if (!emailData || emailData.status !== 'success') {
-    console.error('No valid email data to analyze');
-    return;
-  }
-
-  // Pass directly to Gemma 4 API endpoint:
-  const response = await fetch('https://your-api.com/analyze-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      sender: `${emailData.sender_name} <${emailData.sender_email}>`,
-      subject: emailData.subject,
-      body: emailData.body,
-      links: emailData.links
-    })
-  });
-
-  const analysisReport = await response.json();
-  console.log('AI Scam Report:', analysisReport);
-});
-```
-
----
-
-## 📁 Project Structure
-
-```
-d:\work\HackToFestMumbai\
-├── manifest.json       # Chrome Extension Manifest V3
-├── popup.html          # Extension popup UI
-├── popup.css           # Styling for popup
-├── popup.js            # Popup logic and Gmail tab messaging
-├── content.js          # Gmail DOM extractor script
-├── background.js       # Manifest V3 service worker
-├── preview.html        # New tab preview for extracted data
-├── preview.css         # Styling for preview tab
-├── preview.js          # Safe DOM rendering and storage loader
-├── icons/              # Extension icons (16px, 48px, 128px)
-│   ├── icon16.png
-│   ├── icon48.png
-│   └── icon128.png
-└── README.md           # Setup and integration documentation
 ```
